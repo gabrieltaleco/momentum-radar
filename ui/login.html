@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · Radar</title>
+  <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+  <main class="login-shell">
+    <div class="login-card">
+      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>radar<span class="brand-dot">.</span></span></div>
+      <p class="eyebrow">momentum setorial · acesso privado</p>
+      <h1>Entra no teu radar.</h1>
+      <p class="lede">As leituras, notas e dados da carteira ficam disponíveis apenas depois de iniciares sessão.</p>
+      <form id="login-form" novalidate>
+        <label for="username">Utilizador</label>
+        <input id="username" name="username" autocomplete="username" value="admin" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+        <button type="submit">Entrar <span>→</span></button>
+        <p id="login-message" class="message" role="alert" aria-live="polite"></p>
+      </form>
+      <p class="privacy-note">Sessões expiram após 12 horas e são invalidadas quando o servidor reinicia. Nenhuma password é guardada no projeto.</p>
+    </div>
+  </main>
+  <script>
+    const form = document.getElementById('login-form');
+    const message = document.getElementById('login-message');
+    const params = new URLSearchParams(window.location.search);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      message.textContent = 'A validar…';
+      message.className = 'message';
+      const body = { username: form.username.value.trim(), password: form.password.value };
+      try {
+        const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Não foi possível iniciar sessão.');
+        window.location.href = params.get('next') || '/';
+      } catch (error) {
+        message.textContent = error.message;
+        message.className = 'message error';
+        form.password.select();
+      }
+    });
+  </script>
+</body>
+</html>

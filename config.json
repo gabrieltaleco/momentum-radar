@@ -1,0 +1,211 @@
+{
+  "mode": "demo",
+  "currency": "USD",
+  "lookback_days": 900,
+  "forward_days": 5,
+  "rebalance_every_days": 5,
+  "evaluation_horizons": [5, 20],
+  "risk_free_annual": 0.03,
+  "backtest": {
+    "signal_delay_days": 1,
+    "commission_bps": 1.0,
+    "slippage_bps": 5.0,
+    "walk_forward_train_days": 400,
+    "walk_forward_test_days": 100
+  },
+  "cache": {
+    "enabled": true,
+    "stale_if_error": true,
+    "ttl_seconds": 21600,
+    "ttl_by_namespace": {
+      "alpha_vantage": 21600,
+      "news": 43200,
+      "fred": 86400,
+      "coinmarketcap": 21600,
+      "tiingo": 21600,
+      "yahoo_finance": 21600
+    }
+  },
+  "provider_fallbacks": {
+    "alpha_vantage": ["yahoo_finance"]
+  },
+  "network": {
+    "skip_weekend_full_runs": true,
+    "alpha_vantage_min_interval_seconds": 1.2,
+    "coinmarketcap_min_interval_seconds": 2.0,
+    "tiingo_min_interval_seconds": 1.0,
+    "yahoo_finance_min_interval_seconds": 0.5,
+    "default_min_interval_seconds": 0.0,
+    "provider_cooldown_seconds": 300,
+    "daily_call_budgets": {"alpha_vantage": 25, "tiingo": 1000, "yahoo_finance": 60},
+    "daily_call_reserves": {"alpha_vantage": 5, "yahoo_finance": 5},
+    "portfolio_monitor": {"enabled": true, "max_assets_per_run": 10, "reserve_calls": 5, "selection": "maior valor sem leitura local"}
+  },
+  "alpha_vantage": {"outputsize": "compact"},
+  "tiingo": {
+    "base_url": "https://api.tiingo.com",
+    "use_adjusted_close": true
+  },
+  "coinmarketcap": {
+    "base_url": "https://pro-api.coinmarketcap.com",
+    "max_history_days": 365
+  },
+  "require_context_for_action": true,
+  "weights": {
+    "momentum": 0.35,
+    "relative_strength": 0.2,
+    "trend": 0.15,
+    "breadth": 0.1,
+    "volume": 0.1,
+    "news": 0.05,
+    "macro": 0.05
+  },
+  "thresholds": {
+    "buy_score": 80,
+    "hold_score": 55,
+    "min_confidence": 55,
+    "max_position_pct": 0.1,
+    "max_sector_pct": 0.2,
+    "paper_drawdown_brake_pct": 0.15,
+    "paper_entry_ladder": {
+      "enabled": false,
+      "min_confidence": 70,
+      "max_new_entries": 2,
+      "cash_floor_pct": 0.5,
+      "max_total_exposure_pct": 0.4,
+      "max_position_pct": 0.04,
+      "max_sector_pct": 0.15,
+      "tiers": [
+        {"name": "exploratoria", "min_score": 60, "max_score": 70, "horizon_days": 5, "allocation_pct": 0.005, "risk_pct": 0.0005},
+        {"name": "confirmada", "min_score": 70, "max_score": 80, "horizon_days": 20, "allocation_pct": 0.02, "risk_pct": 0.0015},
+        {"name": "forte", "min_score": 80, "max_score": 101, "horizon_days": 60, "allocation_pct": 0.04, "risk_pct": 0.0025}
+      ]
+    },
+    "paper_entry_matrix": {
+      "enabled": false,
+      "version": "paper-matrix-v2",
+      "min_confidence": 70,
+      "min_data_points": 200,
+      "min_entry_score": 60,
+      "exit_score": 45,
+      "exit_on_maturity": true,
+      "max_new_entries": 2,
+      "cash_floor_pct": 0.50,
+      "max_total_exposure_pct": 0.40,
+      "max_asset_pct": 0.06,
+      "max_position_pct": 0.04,
+      "max_sector_pct": 0.15,
+      "max_horizon_pct": 0.20,
+      "horizons": [
+        {"key": "short", "label": "Curto · 5 sessões", "sessions": 5, "tiers": [
+          {"name": "60–69", "min_score": 60, "max_score": 70, "allocation_pct": 0.0025, "risk_pct": 0.00025},
+          {"name": "70–79", "min_score": 70, "max_score": 80, "allocation_pct": 0.005, "risk_pct": 0.0005},
+          {"name": "80+", "min_score": 80, "max_score": 101, "allocation_pct": 0.01, "risk_pct": 0.001}
+        ]},
+        {"key": "medium", "label": "Médio · 20 sessões", "sessions": 20, "tiers": [
+          {"name": "60–69", "min_score": 60, "max_score": 70, "allocation_pct": 0.005, "risk_pct": 0.0005},
+          {"name": "70–79", "min_score": 70, "max_score": 80, "allocation_pct": 0.01, "risk_pct": 0.001},
+          {"name": "80+", "min_score": 80, "max_score": 101, "allocation_pct": 0.02, "risk_pct": 0.0015}
+        ]},
+        {"key": "long", "label": "Longo · 60 sessões", "sessions": 60, "tiers": [
+          {"name": "60–69", "min_score": 60, "max_score": 70, "allocation_pct": 0.01, "risk_pct": 0.00075},
+          {"name": "70–79", "min_score": 70, "max_score": 80, "allocation_pct": 0.02, "risk_pct": 0.0015},
+          {"name": "80+", "min_score": 80, "max_score": 101, "allocation_pct": 0.03, "risk_pct": 0.0025}
+        ]}
+      ]
+    }
+  },
+  "universe": [
+    {"symbol": "GOLD", "sector": "Metais preciosos", "provider": "alpha_vantage", "source_id": "GLD"},
+    {"symbol": "SILVER", "sector": "Metais preciosos", "provider": "alpha_vantage", "source_id": "SLV"},
+    {"symbol": "BTC", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "1", "news_ticker": "CRYPTO:BTC"},
+    {"symbol": "ETH", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "1027", "news_ticker": "CRYPTO:ETH"},
+    {"symbol": "AI", "sector": "IA e semicondutores", "provider": "alpha_vantage", "source_id": "SOXX"},
+    {"symbol": "CLOUD", "sector": "Cloud e cibersegurança", "provider": "alpha_vantage", "source_id": "SKYY"},
+    {"symbol": "BANKS", "sector": "Bancos e financeiro", "provider": "alpha_vantage", "source_id": "KBE"},
+    {"symbol": "ENERGY", "sector": "Energia", "provider": "alpha_vantage", "source_id": "XLE"},
+    {"symbol": "URANIUM", "sector": "Urânio e nuclear", "provider": "alpha_vantage", "source_id": "URA"},
+    {"symbol": "BIOTECH", "sector": "Biotecnologia", "provider": "alpha_vantage", "source_id": "XBI"}
+  ],
+  "universe_profiles": {
+    "expanded": [
+      {"symbol": "SMH", "sector": "IA e semicondutores", "provider": "yahoo_finance", "source_id": "SMH"},
+      {"symbol": "PSI", "sector": "IA e semicondutores", "provider": "yahoo_finance", "source_id": "PSI"},
+      {"symbol": "XSD", "sector": "IA e semicondutores", "provider": "yahoo_finance", "source_id": "XSD"},
+      {"symbol": "SOXQ", "sector": "IA e semicondutores", "provider": "yahoo_finance", "source_id": "SOXQ"},
+      {"symbol": "CLOU", "sector": "Cloud e cibersegurança", "provider": "yahoo_finance", "source_id": "CLOU"},
+      {"symbol": "WCLD", "sector": "Cloud e cibersegurança", "provider": "yahoo_finance", "source_id": "WCLD"},
+      {"symbol": "HACK", "sector": "Cloud e cibersegurança", "provider": "yahoo_finance", "source_id": "HACK"},
+      {"symbol": "CIBR", "sector": "Cloud e cibersegurança", "provider": "yahoo_finance", "source_id": "CIBR"},
+      {"symbol": "KRE", "sector": "Bancos e financeiro", "provider": "yahoo_finance", "source_id": "KRE"},
+      {"symbol": "EUFN", "sector": "Bancos e financeiro", "provider": "yahoo_finance", "source_id": "EUFN"},
+      {"symbol": "KBWB", "sector": "Bancos e financeiro", "provider": "yahoo_finance", "source_id": "KBWB"},
+      {"symbol": "FINX", "sector": "Bancos e financeiro", "provider": "yahoo_finance", "source_id": "FINX"},
+      {"symbol": "XOP", "sector": "Energia", "provider": "yahoo_finance", "source_id": "XOP"},
+      {"symbol": "OIH", "sector": "Energia", "provider": "yahoo_finance", "source_id": "OIH"},
+      {"symbol": "USO", "sector": "Energia", "provider": "yahoo_finance", "source_id": "USO"},
+      {"symbol": "UNG", "sector": "Energia", "provider": "yahoo_finance", "source_id": "UNG"},
+      {"symbol": "IAU", "sector": "Metais preciosos", "provider": "yahoo_finance", "source_id": "IAU"},
+      {"symbol": "GDX", "sector": "Metais preciosos", "provider": "yahoo_finance", "source_id": "GDX"},
+      {"symbol": "PPLT", "sector": "Metais preciosos", "provider": "yahoo_finance", "source_id": "PPLT"},
+      {"symbol": "PALL", "sector": "Metais preciosos", "provider": "yahoo_finance", "source_id": "PALL"},
+      {"symbol": "SOL", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "5426"},
+      {"symbol": "BNB", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "1839"},
+      {"symbol": "XRP", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "52"},
+      {"symbol": "ADA", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "2010"},
+      {"symbol": "DOGE", "sector": "Cripto", "provider": "coinmarketcap", "source_id": "74"},
+      {"symbol": "TLT", "sector": "Obrigações", "provider": "yahoo_finance", "source_id": "TLT"},
+      {"symbol": "IEF", "sector": "Obrigações", "provider": "yahoo_finance", "source_id": "IEF"},
+      {"symbol": "SHY", "sector": "Obrigações", "provider": "yahoo_finance", "source_id": "SHY"},
+      {"symbol": "HYG", "sector": "Obrigações", "provider": "yahoo_finance", "source_id": "HYG"},
+      {"symbol": "LQD", "sector": "Obrigações", "provider": "yahoo_finance", "source_id": "LQD"},
+      {"symbol": "QQQ", "sector": "Tecnologia", "provider": "yahoo_finance", "source_id": "QQQ"},
+      {"symbol": "XLK", "sector": "Tecnologia", "provider": "yahoo_finance", "source_id": "XLK"},
+      {"symbol": "VGT", "sector": "Tecnologia", "provider": "yahoo_finance", "source_id": "VGT"},
+      {"symbol": "IGV", "sector": "Tecnologia", "provider": "yahoo_finance", "source_id": "IGV"},
+      {"symbol": "FDN", "sector": "Tecnologia", "provider": "yahoo_finance", "source_id": "FDN"},
+      {"symbol": "XLV", "sector": "Saúde", "provider": "yahoo_finance", "source_id": "XLV"},
+      {"symbol": "IBB", "sector": "Saúde", "provider": "yahoo_finance", "source_id": "IBB"},
+      {"symbol": "XBI", "sector": "Saúde", "provider": "yahoo_finance", "source_id": "XBI"},
+      {"symbol": "IHI", "sector": "Saúde", "provider": "yahoo_finance", "source_id": "IHI"},
+      {"symbol": "ARKG", "sector": "Saúde", "provider": "yahoo_finance", "source_id": "ARKG"},
+      {"symbol": "XLY", "sector": "Consumo", "provider": "yahoo_finance", "source_id": "XLY"},
+      {"symbol": "XLP", "sector": "Consumo", "provider": "yahoo_finance", "source_id": "XLP"},
+      {"symbol": "XRT", "sector": "Consumo", "provider": "yahoo_finance", "source_id": "XRT"},
+      {"symbol": "ITB", "sector": "Consumo", "provider": "yahoo_finance", "source_id": "ITB"},
+      {"symbol": "IBUY", "sector": "Consumo", "provider": "yahoo_finance", "source_id": "IBUY"},
+      {"symbol": "SPY", "sector": "Índices", "provider": "yahoo_finance", "source_id": "SPY"},
+      {"symbol": "IWM", "sector": "Índices", "provider": "yahoo_finance", "source_id": "IWM"},
+      {"symbol": "VTI", "sector": "Índices", "provider": "yahoo_finance", "source_id": "VTI"},
+      {"symbol": "VOO", "sector": "Índices", "provider": "yahoo_finance", "source_id": "VOO"},
+      {"symbol": "RSP", "sector": "Índices", "provider": "yahoo_finance", "source_id": "RSP"},
+      {"symbol": "XLI", "sector": "Indústria", "provider": "yahoo_finance", "source_id": "XLI"},
+      {"symbol": "VIS", "sector": "Indústria", "provider": "yahoo_finance", "source_id": "VIS"},
+      {"symbol": "PAVE", "sector": "Indústria", "provider": "yahoo_finance", "source_id": "PAVE"},
+      {"symbol": "ITA", "sector": "Indústria", "provider": "yahoo_finance", "source_id": "ITA"},
+      {"symbol": "JETS", "sector": "Indústria", "provider": "yahoo_finance", "source_id": "JETS"}
+    ]
+  },
+  "providers": {
+    "alpha_vantage": "https://www.alphavantage.co/documentation/",
+    "tiingo": "https://www.tiingo.com/documentation/end-of-day",
+    "coinmarketcap": "https://coinmarketcap.com/api/documentation/guides/get-historical-price-data",
+    "fred": "https://fred.stlouisfed.org/docs/api/fred/series_observations.html"
+  },
+  "news": {
+    "provider": "alpha_vantage",
+    "lookback_hours": 72,
+    "limit": 100,
+    "query_tickers": ["GLD", "SLV", "CRYPTO:BTC", "CRYPTO:ETH", "SOXX", "SKYY", "KBE", "XLE", "URA", "XBI"]
+  },
+  "macro": {
+    "provider": "fred",
+    "series": [
+      {"id": "VIXCLS", "label": "VIX"},
+      {"id": "T10Y2Y", "label": "Spread 10Y-2Y"},
+      {"id": "DTWEXBGS", "label": "Dólar amplo", "max_age_days": 14},
+      {"id": "CPIAUCSL", "label": "CPI / inflação", "max_age_days": 60},
+      {"id": "T5YIFR", "label": "Inflação esperada 5Y5Y", "max_age_days": 14}
+    ]
+  }
+}

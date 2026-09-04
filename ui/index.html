@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14222b">
+  <title>Radar — decisões com contexto</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="#top" aria-label="Radar início">
+        <span class="brand-mark"><i></i><i></i><i></i></span>
+        <span>radar<span class="brand-dot">.</span></span>
+      </a>
+      <p class="sidebar-kicker">momentum setorial</p>
+      <nav class="nav-links">
+        <a class="nav-link active" href="#today"><span>01</span> Hoje</a>
+        <a class="nav-link" href="#browser"><span>02</span> Explorar ativos</a>
+        <a class="nav-link" href="#inventory"><span>03</span> Minha carteira</a>
+        <a class="nav-link" href="#alerts"><span>04</span> Supervisão</a>
+        <a class="nav-link" href="#reports"><span>05</span> Reports</a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="system-note"><span class="status-dot"></span><span>modo local · sem ordens</span></div>
+        <p>Os sinais organizam informação. A decisão e o risco continuam contigo.</p>
+      </div>
+    </aside>
+
+    <main class="main" id="top">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">cockpit de mercado</p>
+          <h1>Decide com contexto.</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="freshness" id="freshness"><span class="status-dot"></span><span>A carregar dados…</span></div>
+          <button class="icon-button" id="refresh-button" title="Ler o último snapshot" aria-label="Atualizar painel">↻</button>
+          <button class="icon-button" id="logout-button" title="Terminar sessão" aria-label="Terminar sessão">sair</button>
+        </div>
+      </header>
+
+      <section class="hero" id="today">
+        <div class="hero-copy">
+          <p class="eyebrow accent">leitura rápida</p>
+          <h2>O mercado fala em sinais.<br><em>Tu decides o ritmo.</em></h2>
+          <p class="hero-lede">Escolhe um ativo, vê o que mudou e entende o porquê antes de fazer qualquer movimento.</p>
+          <span class="hero-actions"><a class="text-link" href="#browser">Explorar o universo <span>→</span></a><a class="text-link muted-link" href="/api/daily-report">Markdown <span>↓</span></a><a class="text-link muted-link" href="/api/daily-report?format=pdf">PDF diário <span>↓</span></a></span>
+        </div>
+        <div class="hero-ticker" aria-label="Estado do radar">
+          <div class="ticker-cap"><span>estado do radar</span><span id="ticker-date">—</span></div>
+          <div class="ticker-main"><span id="hero-action">—</span><strong id="hero-count">—</strong></div>
+          <div class="ticker-foot"><span id="hero-context">A preparar contexto…</span><span id="hero-confidence">—</span></div>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Resumo de mercado">
+        <article class="summary-card">
+          <div class="card-label"><span class="label-dot orange"></span>melhor leitura</div>
+          <div class="summary-value" id="top-asset">—</div>
+          <p id="top-asset-copy">A carregar o sinal mais forte…</p>
+          <button class="card-action" id="top-asset-button">Ver análise <span>→</span></button>
+        </article>
+        <article class="summary-card">
+          <div class="card-label"><span class="label-dot blue"></span>ambiente económico</div>
+          <div class="summary-value" id="macro-score">—</div>
+          <p>Leitura simples de inflação, juros e moeda.</p>
+          <div class="mini-meter"><span id="macro-meter"></span></div>
+        </article>
+        <article class="summary-card">
+          <div class="card-label"><span class="label-dot green"></span>supervisão</div>
+          <div class="summary-value" id="supervision-count">—</div>
+          <p id="supervision-copy">A verificar qualidade e concentração.</p>
+          <a class="card-action" href="#alerts">Abrir supervisão <span>→</span></a>
+        </article>
+        <article class="summary-card">
+          <div class="card-label"><span class="label-dot blue"></span>quota live</div>
+          <div class="summary-value" id="quota-summary">—</div>
+          <p id="quota-copy">A verificar orçamento local.</p>
+          <a class="card-action" href="#alerts">Ver estado <span>→</span></a>
+        </article>
+      </section>
+
+      <section class="decision-brief" id="decision-brief" aria-live="polite">
+        <div class="decision-brief-mark"><span class="card-label"><span class="label-dot orange"></span>decisão desta ronda</span><strong id="decision-brief-status">a ler</strong></div>
+        <div class="decision-brief-copy"><h3 id="decision-brief-title">A preparar a leitura do paper trading</h3><p id="decision-brief-text">O Radar vai juntar o sinal atual, o limiar de compra e o motivo de qualquer bloqueio.</p></div>
+        <div class="decision-brief-watch" id="decision-brief-watch"><span>ativos a acompanhar</span><div id="decision-brief-items"><small>—</small></div></div>
+      </section>
+
+      <section class="portfolio-focus" id="portfolio-focus" aria-live="polite">
+        <div class="portfolio-focus-copy"><span class="card-label"><span class="label-dot green"></span>minha carteira · prioridade</span><h2>Começa pelo que já tens.</h2><p>O radar deve gastar a atenção — e a quota live disponível — nas posições que realmente acompanhas.</p></div>
+        <div class="portfolio-focus-metrics" id="portfolio-focus-metrics"><span>a carregar a carteira…</span></div>
+        <div class="portfolio-focus-queue" id="portfolio-focus-queue" aria-label="Próxima fila de monitorização"></div>
+        <a class="text-link" href="#inventory">Abrir carteira <span>→</span></a>
+      </section>
+
+      <section class="section" id="browser">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / universo</p>
+            <h2>Explora um ativo</h2>
+          </div>
+          <p class="section-note">Pesquisa a prateleira local sem gastar quota. Só “Analisar live” consulta APIs para o ativo escolhido.</p>
+        </div>
+        <label class="search-box explorer-search" id="asset-search-primary-wrap"><span aria-hidden="true">⌕</span><input id="asset-search-primary" type="search" placeholder="Pesquisar ETF, metal, cripto…" autocomplete="off"><kbd>/</kbd></label>
+        <div class="explorer-intro-row"><div><span class="card-label">destaques do radar</span><strong id="asset-highlight-title">3 leituras para começar</strong></div><small id="asset-highlight-note">Ativos com sinal disponível, priorizando a tua carteira.</small></div>
+        <div class="asset-highlights" id="asset-highlights" aria-live="polite"></div>
+        <details class="advanced-explorer" id="advanced-explorer">
+          <summary>Ver catálogo completo e diagnósticos avançados <span>filtros, comparação e rotação</span></summary>
+        <div class="browser-tools">
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="asset-search" type="search" placeholder="Pesquisar ETF, metal, cripto…" autocomplete="off"><kbd>/</kbd></label>
+          <div class="quick-filter-row" id="quick-filters" aria-label="Filtros rápidos"></div>
+          <div class="filter-row" id="sector-filters" aria-label="Filtrar por setor"></div>
+        </div>
+        <div class="saved-view-tools" id="saved-view-tools">
+          <select id="saved-views" aria-label="Vistas guardadas"><option value="">Vistas guardadas</option></select>
+          <select id="asset-sort" aria-label="Ordenar ativos"><option value="score">Score mais alto</option><option value="symbol">Símbolo A–Z</option><option value="sector">Setor A–Z</option><option value="action">Ação</option><option value="favorite">Favoritos primeiro</option></select>
+          <input id="save-view-name" type="text" maxlength="32" placeholder="Nome da vista" autocomplete="off">
+          <button class="filter-button" id="save-view" type="button">Guardar vista</button>
+          <button class="filter-button" id="remove-view" type="button" disabled>Remover</button>
+          <button class="filter-button" id="export-assets-csv" type="button">Exportar CSV</button>
+          <span class="view-message" id="view-message" role="status"></span>
+        </div>
+        <div class="sector-pulse-wrap">
+          <div class="sector-pulse-heading"><span class="card-label"><span class="label-dot orange"></span>pulso por setor</span><span>média do score · snapshot atual</span></div>
+          <div class="sector-pulse" id="sector-pulse" aria-label="Resumo do score por setor"></div>
+          <div class="heatmap-heading"><span>mapa de calor por ativo</span><span>cor = score · cinzento = sem leitura</span></div>
+          <div class="sector-heatmap" id="sector-heatmap" aria-label="Mapa de calor de ativos por setor"></div>
+          <div class="rotation-heading"><span>rotação relativa por setor</span><span>força relativa × impulso · snapshot atual</span></div>
+          <div class="sector-rotation" id="sector-rotation" aria-label="Matriz de rotação relativa por setor"></div>
+        </div>
+        <div class="compare-tray" id="compare-tray" hidden>
+          <div class="compare-head"><span class="card-label"><span class="label-dot blue"></span>comparar ativos</span><button class="text-button" id="clear-compare" type="button">Limpar</button></div>
+          <p class="compare-help">Seleciona até três ativos para comparar os fatores do mesmo snapshot. Não faz novas chamadas.</p>
+          <div class="compare-content" id="compare-content"></div>
+          <div class="compare-message" id="compare-message" role="status"></div>
+        </div>
+        <div class="asset-layout">
+          <div class="asset-list" id="asset-grid" aria-live="polite"></div>
+          <article class="asset-detail" id="asset-detail" aria-live="polite">
+            <div class="empty-detail"><span class="empty-glyph">+</span><h3>Escolhe um ativo</h3><p>A análise mostra o sinal, os fatores e o contexto que o rodeia.</p></div>
+          </article>
+        </div>
+        </details>
+      </section>
+
+      <section class="section inventory-section" id="inventory">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">03 / inventário</p>
+            <h2>Minha carteira</h2>
+          </div>
+          <p class="section-note">Acompanhamento local da carteira. O relatório destaca setores e posições com score >= 80. <button class="inline-report-button" id="export-portfolio-report" type="button">PDF carteira + destaques ↓</button></p>
+        </div>
+        <div class="inventory-layout">
+          <div class="inventory-card">
+             <div class="inventory-head"><div><span class="card-label">exposição acompanhada</span><strong id="portfolio-total">€0</strong><small class="portfolio-valuation-note" id="portfolio-valuation-note">A preparar a valorização em EUR.</small></div><span class="pill muted" id="portfolio-updated">ainda vazio</span></div>
+             <div class="sector-exposure" id="portfolio-sector-exposure"></div>
+             <details class="portfolio-targets-details" id="portfolio-targets-details"><summary>Metas por setor <span>opcional · não cria ordens</span></summary><div class="portfolio-targets" id="portfolio-targets"></div></details>
+             <div class="table-wrap"><table><thead><tr><th>ativo</th><th>valor atual</th><th>preço médio</th><th>resultado da compra</th><th>peso</th><th>sinal</th><th></th></tr></thead><tbody id="portfolio-table"><tr><td colspan="7" class="table-empty">Adiciona uma posição para começar a acompanhar.</td></tr></tbody></table></div>
+          </div>
+          <form class="add-position" id="position-form">
+            <p class="card-label">adicionar posição</p>
+            <label>Ativo<input id="position-symbol" required placeholder="ex.: GLD" maxlength="20"></label>
+            <div class="form-row"><label>Quantidade<input id="position-quantity" required type="number" min="0.000001" step="any" placeholder="0"></label><label>Preço médio<input id="position-cost" required type="number" min="0" step="any" placeholder="0,00"></label></div>
+            <button class="primary-button" type="submit">Guardar no inventário <span>＋</span></button>
+            <p class="form-help">Podes usar um ativo fora do radar; ficará marcado até ser configurado para análise.</p>
+            <div class="form-message" id="form-message" role="status"></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="section alerts-section" id="alerts">
+        <div class="section-heading">
+          <div><p class="eyebrow">04 / supervisão</p><h2>O que merece atenção</h2></div>
+          <p class="section-note">A app avisa quando os dados ou a carteira pedem uma segunda olhada.</p>
+        </div>
+        <div class="supervision-guide"><div><strong>Dados</strong><span>frescura, cobertura e quota</span></div><div><strong>Carteira</strong><span>concentração e risco</span></div><div><strong>Execução</strong><span>paper trading e tarefas</span></div><p>Serve para saber o que está incompleto ou merece confirmação. Não envia ordens.</p></div>
+        <div class="watch-rule-panel">
+          <div class="watch-rule-heading"><span class="card-label"><span class="label-dot orange"></span>regras locais</span><span>avaliadas no snapshot · sem chamadas externas</span></div>
+          <form class="watch-rule-form" id="watch-rule-form">
+            <label>campo<select id="rule-metric"><option value="score">Score</option><option value="confidence">Confiança</option><option value="momentum">Impulso</option><option value="relative_strength">Força relativa</option></select></label>
+            <label>operador<select id="rule-operator"><option value="gte">≥ maior ou igual</option><option value="lte">≤ menor ou igual</option></select></label>
+            <label>limiar<input id="rule-threshold" type="number" min="0" max="100" step="0.1" value="80" required></label>
+            <label>escopo<select id="rule-scope"><option value="all">Todo o catálogo</option><option value="portfolio">Minha carteira</option><option value="favorites">Favoritos</option><option value="sector">Setor atual</option></select></label>
+            <label>disparo<select id="rule-trigger"><option value="enter">Ao entrar</option><option value="always">Cada snapshot</option></select></label>
+            <button class="primary-button" type="submit">Guardar regra <span>＋</span></button>
+          </form>
+          <div class="watch-rule-list" id="watch-rule-list" aria-live="polite"></div>
+          <div class="notification-settings">
+            <div><strong>notificações locais</strong><small id="notification-status">desativadas · não há chamadas externas</small></div>
+            <button class="secondary-button" id="enable-notifications" type="button">Ativar notificações</button>
+          </div>
+        </div>
+        <div class="alert-tools">
+          <label class="alert-search"><span class="sr-only">Pesquisar supervisão</span><input id="alert-search" type="search" placeholder="Pesquisar alertas, ativos ou razões" autocomplete="off"></label>
+          <label class="alert-sort-label">ordenar<select id="alert-sort"><option value="priority">por rever primeiro</option><option value="severity">gravidade</option><option value="category">categoria</option></select></label>
+          <button class="secondary-button alert-review-visible" id="review-visible-alerts" type="button">Marcar visíveis revistos</button>
+          <button class="secondary-button alert-export" id="export-alerts-report" type="button">Relatório <span>↓</span></button>
+        </div>
+        <div class="alert-filter-row" id="alert-filters" aria-label="Filtrar supervisão"></div>
+        <div class="alert-list" id="alert-list" aria-live="polite"></div>
+      </section>
+
+      <section class="section reports-section" id="reports">
+        <div class="section-heading">
+          <div><p class="eyebrow">05 / arquivo</p><h2>Reports anteriores</h2></div>
+          <p class="section-note">Arquivo local: abre uma cópia já gerada, sem repetir chamadas. Usa-o para perceber o que mudou e o que ainda falta testar.</p>
+        </div>
+        <div class="report-library" id="report-library" aria-live="polite"></div>
+        <div class="paper-report-panel" id="paper-report-panel" aria-live="polite"></div>
+        <div class="snapshot-comparison" id="snapshot-comparison" aria-live="polite"></div>
+      </section>
+
+      <footer class="footer"><span>radar / interface local v0.2</span><span>sem ordens · dados da última execução</span></footer>
+
+    </main>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

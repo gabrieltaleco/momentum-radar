@@ -1,0 +1,37 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Private portfolio data and local state
+data/user_portfolio.json
+data/portfolio_import_*.json
+data/decision_journal.json
+data/on_demand/
+data/*.local.json
+data/cache/
+
+# Generated reports, provider caches and paper ledgers
+outputs/*
+!outputs/.gitkeep
+tmp/
+work/
+
+# Python and local tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+.runtime/
+src/node_modules/
+.gstack/
+.playwright-cli/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

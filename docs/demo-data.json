@@ -1,0 +1,13 @@
+{
+  "meta": {"as_of": "2026-09-03", "mode": "demo", "macro_score": 73.6},
+  "signals": [
+    {"symbol":"XAIX","sector":"IA e semicondutores","score":56.62,"confidence":95.1,"action":"Manter/observar","notes":"A favor: tendência. A vigiar: volume."},
+    {"symbol":"IUIT","sector":"Tecnologia","score":55.8,"confidence":95.07,"action":"Manter/observar","notes":"A favor: tendência. A vigiar: volume."},
+    {"symbol":"ENERGY","sector":"Energia","score":55.6,"confidence":92.23,"action":"Manter/observar","notes":"A favor: tendência. A vigiar: volume."},
+    {"symbol":"CLOUD","sector":"Cloud e cibersegurança","score":55.27,"confidence":94.37,"action":"Manter/observar","notes":"A favor: tendência e momentum. A vigiar: risco dentro do limite."},
+    {"symbol":"LYP6","sector":"Índices europeus","score":54.6,"confidence":95.69,"action":"Reduzir/evitar","notes":"A favor: tendência. A vigiar: risco dentro do limite."},
+    {"symbol":"SPYL","sector":"Índices","score":53.55,"confidence":94.72,"action":"Reduzir/evitar","notes":"A favor: tendência. A vigiar: volume."},
+    {"symbol":"VDCA","sector":"Obrigações","score":53.19,"confidence":95.53,"action":"Reduzir/evitar","notes":"A favor: tendência. A vigiar: risco dentro do limite."},
+    {"symbol":"BIOTECH","sector":"Biotecnologia","score":52.08,"confidence":93.16,"action":"Reduzir/evitar","notes":"A favor: tendência e momentum. A vigiar: volume."}
+  ]
+}

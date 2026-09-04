@@ -68,7 +68,7 @@ def _prune(now: float) -> None:
         if session.expires_at <= now:
             _sessions.pop(token, None)
     for address, (_count, until) in list(_failed_attempts.items()):
-        if until <= now:
+        if until and until <= now:
             _failed_attempts.pop(address, None)
 
 
@@ -76,14 +76,14 @@ def login_allowed(address: str, now: float | None = None) -> bool:
     current = time.time() if now is None else now
     _prune(current)
     attempt = _failed_attempts.get(address)
-    return not attempt or attempt[1] <= current
+    return not attempt or not attempt[1] or attempt[1] <= current
 
 
 def record_failed_login(address: str, now: float | None = None) -> None:
     current = time.time() if now is None else now
     count, _until = _failed_attempts.get(address, (0, current))
     count += 1
-    lock_until = current + LOCKOUT_SECONDS if count >= MAX_LOGIN_ATTEMPTS else current
+    lock_until = current + LOCKOUT_SECONDS if count >= MAX_LOGIN_ATTEMPTS else 0.0
     _failed_attempts[address] = (count, lock_until)
 
 

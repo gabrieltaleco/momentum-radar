@@ -2,9 +2,10 @@ services:
   - type: web
     name: momentum-radar
     runtime: python
-    buildCommand: python src/momentum_tool.py --mode demo --output-dir outputs
+    plan: free
+    buildCommand: python -m src.momentum_tool --mode demo --output-dir outputs && RADAR_DEMO_BUILD=1 python scripts/prepare_demo.py --output-dir outputs
     startCommand: python app_server.py --host 0.0.0.0 --port $PORT
-    healthCheckPath: /api/session
+    healthCheckPath: /healthz
     envVars:
       - key: RADAR_AUTH_USERNAME
         value: admin

@@ -31,6 +31,13 @@ class AuthTests(unittest.TestCase):
         self.assertFalse(auth.login_allowed("127.0.0.1", now=10.0))
         self.assertTrue(auth.login_allowed("127.0.0.1", now=10.0 + auth.LOCKOUT_SECONDS + 1))
 
+    def test_failed_attempts_accumulate_before_lock_even_when_spaced(self):
+        for attempt in range(auth.MAX_LOGIN_ATTEMPTS):
+            now = 20.0 + attempt * 30.0
+            self.assertTrue(auth.login_allowed("127.0.0.1", now=now))
+            auth.record_failed_login("127.0.0.1", now=now)
+        self.assertFalse(auth.login_allowed("127.0.0.1", now=140.0))
+
     def test_cookie_parser_handles_only_the_named_cookie(self):
         self.assertEqual(auth.parse_cookie("theme=dark; radar_session=abc123; other=x"), "abc123")
         self.assertIsNone(auth.parse_cookie("theme=dark"))

@@ -9,7 +9,10 @@ import json
 from pathlib import Path
 import sys
 
-from momentum_tool import DEFAULT_CONFIG, fetch_live_data, load_config, quality_rows
+try:
+    from src.momentum_tool import DEFAULT_CONFIG, fetch_live_data, load_config, quality_rows
+except ModuleNotFoundError:  # direct execution from the src directory
+    from momentum_tool import DEFAULT_CONFIG, fetch_live_data, load_config, quality_rows
 
 
 def main() -> int:

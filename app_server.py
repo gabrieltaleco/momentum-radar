@@ -1297,6 +1297,22 @@ def markdown_report(symbol: str) -> tuple[str, str] | None:
             "",
             f"**Explicação:** {signal.get('notes', 'O radar não deixou uma explicação adicional.')}",
             "",
+        ])
+        horizon_payload = signal.get("horizons", {})
+        if isinstance(horizon_payload, dict) and any(isinstance(horizon_payload.get(key), dict) for key in ("short", "medium", "long")):
+            lines.extend([
+                "## Horizontes de decisão",
+                "",
+                "| Prazo | Ação | Score | Foco |",
+                "|---|---|---:|---|",
+            ])
+            for key in ("short", "medium", "long"):
+                horizon = horizon_payload.get(key, {})
+                if not isinstance(horizon, dict):
+                    continue
+                lines.append(f"| {horizon.get('label', key)} | {horizon.get('action', 'Sem leitura')} | {number(horizon.get('score')):.1f} | {horizon.get('focus', 'contexto indisponível')} |")
+            lines.append("")
+        lines.extend([
             "### Fatores",
             "",
             "| Fator | Valor | Leitura para este ativo |",
@@ -1682,6 +1698,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "same-origin")
         self.send_header("Connection", "close")
         self.end_headers()
         self.send_bytes(data)
@@ -1717,6 +1735,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
+        if parsed.path == "/healthz":
+            self.send_json({"ok": True, "service": "momentum-radar"})
+            return
         if parsed.path == "/login":
             if self._session() is not None:
                 self.send_redirect("/")
@@ -2013,12 +2034,15 @@ def main() -> int:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
-    if not auth_disabled() and not os.environ.get("RADAR_AUTH_PASSWORD"):
+    if not auth_disabled() and not os.environ.get("RADAR_AUTH_PASSWORD") and args.host in {"127.0.0.1", "localhost", "::1"}:
         password = getpass("Password do Radar (não será guardada no projeto): ")
         if not password:
             print("É necessária uma password. Define RADAR_AUTH_DISABLED=1 apenas para desenvolvimento local.")
             return 2
         os.environ["RADAR_AUTH_PASSWORD"] = password
+    if not auth_disabled() and not os.environ.get("RADAR_AUTH_PASSWORD"):
+        print("RADAR_AUTH_PASSWORD é obrigatório quando o servidor aceita tráfego externo.")
+        return 2
     UI_DIR.mkdir(parents=True, exist_ok=True)
     print(f"Radar UI em http://{args.host}:{args.port}")
     server = ThreadingHTTPServer((args.host, args.port), DashboardHandler)

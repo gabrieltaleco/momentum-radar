@@ -10,7 +10,10 @@ import json
 from pathlib import Path
 import sys
 
-from momentum_tool import DEFAULT_CONFIG, backtest, generate_demo_data, load_config
+try:
+    from src.momentum_tool import DEFAULT_CONFIG, backtest, generate_demo_data, load_config
+except ModuleNotFoundError:  # direct execution from the src directory
+    from momentum_tool import DEFAULT_CONFIG, backtest, generate_demo_data, load_config
 
 
 def run_sensitivity(config: dict, rows: list[dict], mode: str = "demo") -> dict:

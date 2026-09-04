@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Radar de momentum de mercado. Snapshot público de demonstração.">
+  <title>Radar de momentum</title>
+  <link rel="stylesheet" href="./site.css">
+</head>
+<body>
+  <main id="login-view" class="login-shell">
+    <section class="login-card">
+      <div class="login-pitch">
+        <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>radar<span class="brand-dot">.</span></span></div>
+        <div class="pitch-copy">
+          <p class="eyebrow">acesso ao painel</p>
+          <h1>O teu mercado.<br><em>Com contexto.</em></h1>
+          <p class="lede">Explora um snapshot de momentum por ativo, setor e força relativa.</p>
+        </div>
+        <p class="local-badge"><span></span> demonstração estática · sem ordens</p>
+      </div>
+      <div class="login-form-panel">
+        <p class="eyebrow">identificação</p>
+        <h2>Bem-vindo de volta</h2>
+        <p class="form-lede">Entra para abrir o snapshot público.</p>
+        <form id="login-form">
+          <label for="username">Nome de utilizador</label>
+          <input id="username" name="username" autocomplete="username" placeholder="O teu utilizador" required>
+          <label for="password">Palavra-passe</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Qualquer valor no modo demo" required>
+          <button type="submit">Entrar no Radar <span>→</span></button>
+          <p id="login-message" class="message" role="alert" aria-live="polite"></p>
+        </form>
+        <p class="privacy-note">GitHub Pages serve esta versão estática. O gate é apenas visual e não protege dados privados.</p>
+      </div>
+    </section>
+  </main>
+
+  <main id="radar-view" class="radar-shell" hidden>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Radar início"><span class="brand-mark"><i></i><i></i><i></i></span><span>radar<span class="brand-dot">.</span></span></a>
+      <div class="topbar-actions"><span class="demo-tag">snapshot demo</span><button id="logout-button" class="ghost-button" type="button">Sair</button></div>
+    </header>
+    <section class="hero" id="top">
+      <div><p class="eyebrow">leitura de mercado</p><h1>Momentum sem ruído.</h1><p id="hero-copy" class="hero-copy">A carregar o snapshot...</p></div>
+      <div class="hero-score"><span>ambiente macro</span><strong id="macro-score">--</strong><small>/ 100</small></div>
+    </section>
+    <section class="toolbar" aria-label="Filtros">
+      <label for="search">Pesquisar ativo<input id="search" type="search" placeholder="Ex.: CLOUD"></label>
+      <label for="sector">Setor<select id="sector"><option>Todos</option></select></label>
+      <button id="clear-filters" class="ghost-button" type="button">Limpar filtros</button>
+    </section>
+    <section class="summary-grid" aria-label="Resumo">
+      <article><span>ativos no snapshot</span><strong id="asset-count">--</strong></article>
+      <article><span>score médio</span><strong id="average-score">--</strong></article>
+      <article><span>melhor leitura</span><strong id="top-asset">--</strong></article>
+    </section>
+    <section class="section-head"><div><p class="eyebrow">universo acompanhado</p><h2>Ativos em foco</h2></div><p id="snapshot-date" class="muted"></p></section>
+    <section id="asset-grid" class="asset-grid" aria-live="polite"></section>
+    <footer class="site-footer"><span>Snapshot local para demonstração. Não é aconselhamento financeiro.</span><a href="https://github.com/gabrieltaleco/momentum-radar">Código no GitHub ↗</a></footer>
+  </main>
+  <script src="./site.js"></script>
+</body>
+</html>

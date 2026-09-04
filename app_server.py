@@ -16,6 +16,7 @@ import math
 import os
 import re
 import time
+from getpass import getpass
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -2012,6 +2013,12 @@ def main() -> int:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+    if not auth_disabled() and not os.environ.get("RADAR_AUTH_PASSWORD"):
+        password = getpass("Password do Radar (não será guardada no projeto): ")
+        if not password:
+            print("É necessária uma password. Define RADAR_AUTH_DISABLED=1 apenas para desenvolvimento local.")
+            return 2
+        os.environ["RADAR_AUTH_PASSWORD"] = password
     UI_DIR.mkdir(parents=True, exist_ok=True)
     print(f"Radar UI em http://{args.host}:{args.port}")
     server = ThreadingHTTPServer((args.host, args.port), DashboardHandler)

@@ -325,6 +325,38 @@ class AppServerStateTests(unittest.TestCase):
         finally:
             app_server.JOURNAL_PATH = original
 
+    def test_imported_portfolio_uses_synthetic_positions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            portfolio_path = root / "portfolio.json"
+            catalog_path = root / "catalog.json"
+            portfolio_path.write_text(json.dumps({"positions": [
+                {"symbol": "DEMO_A", "quantity": 2, "avg_cost": 10, "currency": "EUR",
+                 "reference_price": 12, "statement_value_eur": 24, "cost_basis_status": "confirmado_no_extrato"},
+                {"symbol": "DEMO_B", "quantity": 3, "avg_cost": 0, "currency": "USD",
+                 "reference_price": 20, "statement_value_eur": 54, "cost_basis_status": "desconhecido",
+                 "cost_basis_note": "Sem preço de compra na fixture fictícia."},
+            ]}), encoding="utf-8")
+            catalog_path.write_text(json.dumps({"assets": [
+                {"symbol": "DEMO_A", "name": "Ativo fictício A", "sector": "Demo"},
+                {"symbol": "DEMO_B", "name": "Ativo fictício B", "sector": "Demo"},
+            ]}), encoding="utf-8")
+            with patch.object(app_server, "PORTFOLIO_PATH", portfolio_path), \
+                 patch.object(app_server, "IMPORTED_CATALOG_PATH", catalog_path), \
+                 patch.object(app_server, "OUTPUT_DIR", root), \
+                 patch.object(app_server, "ON_DEMAND_DIR", root / "empty-cache"):
+                state = app_server.load_state()
+        positions = {item["symbol"]: item for item in state["portfolio"]["positions"]}
+        self.assertTrue(any(item["symbol"] == "DEMO_A" for item in state["catalog"]))
+        self.assertEqual(set(positions), {"DEMO_A", "DEMO_B"})
+        self.assertEqual(positions["DEMO_A"]["cost_basis_status"], "confirmado_no_extrato")
+        self.assertEqual(positions["DEMO_B"]["cost_basis_status"], "desconhecido")
+        self.assertIn("preço de compra", positions["DEMO_B"]["cost_basis_note"])
+        self.assertEqual(state["portfolio"]["market_value_currency"], "EUR")
+        self.assertEqual(state["portfolio"]["market_value"], 78)
+        self.assertTrue(all(item["market_value_currency"] == "EUR" for item in positions.values()))
+        self.assertTrue(any(item["valuation_source"] == "câmbio implícito do extrato" for item in positions.values()))
+
     def test_live_request_reuses_fresh_on_demand_cache(self):
         original = app_server.ON_DEMAND_DIR
         try:

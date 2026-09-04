@@ -31,10 +31,10 @@ $files = @(
     "ui\index.html",
     "ui\styles.css",
     "ui\app.js",
-    "data\user_portfolio.json",
+    "ui\login.html",
+    "ui\login.css",
     "data\asset_catalog.json",
-    "data\portfolio_import_2026-08-06.json",
-    "scripts\import_portfolio_2026_08_06.py",
+    "src\auth.py",
     "src\momentum_tool.py",
     "src\build_workbook.mjs",
     "src\validate_live.py",
@@ -51,30 +51,8 @@ $files = @(
     "tests\test_sensitivity.py",
     "tests\test_app_server.py",
     "tests\test_ui_launcher.py",
-    "tests\test_metric_explanations.py",
-    "outputs\radar-momentum.xlsx",
-    "outputs\relatorio-momentum.md",
-    "outputs\radar-slv-relatorio.md",
-    "outputs\radar-slv-relatorio.pdf",
-    "outputs\signals.csv",
-    "outputs\momentum_data.json",
-    "outputs\paper_portfolio.json",
-    "outputs\paper_trades.csv",
-    "outputs\paper-report.md",
-    "outputs\paper-week-100k.json",
-    "outputs\paper-week-100k_portfolio.json",
-    "outputs\paper-week-100k_trades.csv",
-    "outputs\paper-week-100k-report.md",
-    "outputs\paper-week-100k_status.json",
-    "outputs\sensitivity.json",
-    "outputs\sensitivity-report.md",
-    "outputs\alerts.json",
-    "outputs\signal-history.jsonl",
-    "outputs\signal-outcomes.jsonl"
+    "tests\test_metric_explanations.py"
 )
-if (Test-Path -LiteralPath (Join-Path $projectRoot "outputs\live-validation.json") -PathType Leaf) {
-    $files += "outputs\live-validation.json"
-}
 
 foreach ($relativePath in $files) {
     $source = Join-Path $projectRoot $relativePath
@@ -86,13 +64,6 @@ foreach ($relativePath in $files) {
     $targetDir = Split-Path -Parent $target
     New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
     Copy-Item -LiteralPath $source -Destination $target -Force
-}
-
-$onDemandSource = Join-Path $projectRoot "data\on_demand"
-if (Test-Path -LiteralPath $onDemandSource -PathType Container) {
-    $onDemandTarget = Join-Path $staging "data\on_demand"
-    New-Item -ItemType Directory -Path $onDemandTarget -Force | Out-Null
-    Get-ChildItem -LiteralPath $onDemandSource -File -Filter "*.json" | Copy-Item -Destination $onDemandTarget -Force
 }
 
 $runtimeSource = Join-Path $projectRoot ".runtime"
@@ -132,7 +103,7 @@ Modo live: execute .\configure-api-keys.ps1 numa PowerShell, abra uma nova janel
 Interface: execute .\run-ui.ps1 e abra http://127.0.0.1:8765 no browser
 Automação: powershell.exe -ExecutionPolicy Bypass -File .\register-daily-task.ps1 -Mode live
 
-O pacote não contém chaves de API. O Excel e o relatório incluídos são o último snapshot gerado.
+O pacote não inclui carteiras pessoais, importações, caches, chaves de API ou relatórios locais. Gere os dados demo com .\run.ps1 -Mode demo.
 $(if ($NodeRuntimeSource) { "Foi incluído um runtime Node mínimo para reconstruir o Excel." } else { "Para reconstruir o Excel, execute com -NodeRuntimeSource apontado para uma distribuição Node que contenha @oai/artifact-tool." })
 "@
 $manifest | Set-Content -LiteralPath (Join-Path $staging "PACOTE.txt") -Encoding UTF8

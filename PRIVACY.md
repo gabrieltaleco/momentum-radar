@@ -10,6 +10,9 @@ O Radar pode ler e guardar posições, quantidade, preço médio, notas pessoais
 preferências do browser e relatórios gerados. A autenticação guarda apenas uma
 sessão temporária em memória; a password não é escrita em disco. O `.gitignore`
 exclui a carteira, notas, caches, outputs e ficheiros de ambiente por defeito.
+Importadores específicos de carteiras e metas pessoais também são excluídos.
+Os testes devem usar posições fictícias e temporárias; nunca extratos reais.
+O pacote portátil exclui dados pessoais e relatórios locais.
 
 ## Dados enviados
 

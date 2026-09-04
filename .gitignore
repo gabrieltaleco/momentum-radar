@@ -9,6 +9,9 @@
 data/user_portfolio.json
 data/portfolio_import_*.json
 data/decision_journal.json
+data/portfolio_targets.json
+scripts/import_portfolio_*.py
+private/
 data/on_demand/
 data/*.local.json
 data/cache/

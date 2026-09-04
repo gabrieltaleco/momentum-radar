@@ -9,19 +9,29 @@
 <body>
   <main class="login-shell">
     <div class="login-card">
-      <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>radar<span class="brand-dot">.</span></span></div>
-      <p class="eyebrow">momentum setorial · acesso privado</p>
-      <h1>Entra no teu radar.</h1>
-      <p class="lede">As leituras, notas e dados da carteira ficam disponíveis apenas depois de iniciares sessão.</p>
-      <form id="login-form" novalidate>
-        <label for="username">Utilizador</label>
-        <input id="username" name="username" autocomplete="username" value="admin" required>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
-        <button type="submit">Entrar <span>→</span></button>
-        <p id="login-message" class="message" role="alert" aria-live="polite"></p>
-      </form>
-      <p class="privacy-note">Sessões expiram após 12 horas e são invalidadas quando o servidor reinicia. Nenhuma password é guardada no projeto.</p>
+      <section class="login-pitch" aria-label="Apresentação do Radar">
+        <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>radar<span class="brand-dot">.</span></span></div>
+        <div class="pitch-copy">
+          <p class="eyebrow">acesso ao painel</p>
+          <h1>O teu mercado.<br><em>Com contexto.</em></h1>
+          <p class="lede">Entra para consultar momentum, carteira e relatórios sem expor os teus dados pessoais.</p>
+        </div>
+        <p class="local-badge"><span></span> painel protegido · sem ordens</p>
+      </section>
+      <section class="login-form-panel" aria-label="Iniciar sessão">
+        <p class="eyebrow">identificação</p>
+        <h2>Bem-vindo de volta</h2>
+        <p class="form-lede">Introduz os teus dados para continuar.</p>
+        <form id="login-form" novalidate>
+          <label for="username">Nome de utilizador</label>
+          <input id="username" name="username" autocomplete="username" placeholder="O teu utilizador" value="admin" required>
+          <label for="password">Palavra-passe</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="A tua palavra-passe" required autofocus>
+          <button type="submit">Entrar no Radar <span>→</span></button>
+          <p id="login-message" class="message" role="alert" aria-live="polite"></p>
+        </form>
+        <p class="privacy-note">A password nunca é guardada no projeto. A sessão expira após 12 horas.</p>
+      </section>
     </div>
   </main>
   <script>

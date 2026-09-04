@@ -2,16 +2,25 @@ const loginView = document.getElementById('login-view');
 const radarView = document.getElementById('radar-view');
 const loginForm = document.getElementById('login-form');
 const loginMessage = document.getElementById('login-message');
+const SESSION_KEY = 'radar-authenticated-v2';
+// Altera o utilizador e gera um novo SHA-256 para outra palavra-passe.
+const ACCESS = Object.freeze({ username: 'admin', passwordHash: 'f226a9d29cdb97d342436fe240a05ca06bb3cb037025874347b5ae06f1bf963b' });
 let state = null;
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 }
 
+async function hashPassword(value) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
 function showRadar() {
   loginView.hidden = true;
   radarView.hidden = false;
-  render();
+  if (state) render();
 }
 
 function showLogin() {
@@ -56,16 +65,32 @@ function renderAssets() {
   }).join('');
 }
 
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if (!loginForm.username.value.trim() || !loginForm.password.value) { loginMessage.textContent = 'Preenche os dois campos para abrir a demonstração.'; loginMessage.className = 'message error'; return; }
-  sessionStorage.setItem('radar-demo-authenticated', '1');
+  const username = loginForm.username.value.trim();
+  const password = loginForm.password.value;
+  if (!username || !password) { loginMessage.textContent = 'Preenche os dois campos para entrar.'; loginMessage.className = 'message error'; return; }
+  let passwordHash = '';
+  try { passwordHash = await hashPassword(password); } catch (error) {
+    loginMessage.textContent = 'Não foi possível validar a palavra-passe neste navegador.';
+    loginMessage.className = 'message error';
+    return;
+  }
+  if (username !== ACCESS.username || passwordHash !== ACCESS.passwordHash) {
+    loginMessage.textContent = 'Utilizador ou palavra-passe incorretos.';
+    loginMessage.className = 'message error';
+    loginForm.password.value = '';
+    loginForm.password.focus();
+    return;
+  }
+  sessionStorage.setItem(SESSION_KEY, '1');
   loginMessage.textContent = '';
+  loginMessage.className = 'message';
   showRadar();
 });
-document.getElementById('logout-button').addEventListener('click', () => { sessionStorage.removeItem('radar-demo-authenticated'); showLogin(); });
+document.getElementById('logout-button').addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
 document.getElementById('search').addEventListener('input', renderAssets);
 document.getElementById('sector').addEventListener('change', renderAssets);
 document.getElementById('clear-filters').addEventListener('click', () => { document.getElementById('search').value = ''; document.getElementById('sector').value = 'Todos'; renderAssets(); });
 
-fetch('./demo-data.json').then((response) => response.json()).then((payload) => { state = payload; if (sessionStorage.getItem('radar-demo-authenticated') === '1') showRadar(); }).catch(() => { loginMessage.textContent = 'Não foi possível carregar o snapshot de demonstração.'; loginMessage.className = 'message error'; });
+fetch('./demo-data.json').then((response) => { if (!response.ok) throw new Error('snapshot unavailable'); return response.json(); }).then((payload) => { state = payload; if (sessionStorage.getItem(SESSION_KEY) === '1') showRadar(); }).catch(() => { loginMessage.textContent = 'Não foi possível carregar o snapshot de demonstração.'; loginMessage.className = 'message error'; });

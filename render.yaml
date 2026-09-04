@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: momentum-radar
+    runtime: python
+    buildCommand: python src/momentum_tool.py --mode demo --output-dir outputs
+    startCommand: python app_server.py --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/session
+    envVars:
+      - key: RADAR_AUTH_USERNAME
+        value: admin
+      - key: RADAR_AUTH_PASSWORD
+        sync: false
